@@ -1,6 +1,6 @@
 package com.example.demo.cofing;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,15 +13,10 @@ import javax.sql.DataSource;
 
 
 @Configuration
-
+@RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final DataSource dataSource;
-
-    @Autowired
-    public SecurityConfiguration(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
 
 
     @Bean
@@ -29,21 +24,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeRequests()
-                    .antMatchers("/register").permitAll()
-                    .antMatchers("/login").permitAll()
-                    .antMatchers("/").permitAll()
-                    .anyRequest().authenticated()
-                    .and()
+                .antMatchers("/register").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/").permitAll()
+                .anyRequest().authenticated()
+                .and()
                 .formLogin()
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/")
-                    .and()
+                .loginPage("/login")
+                .defaultSuccessUrl("/")
+                .and()
                 .logout()
-                    .logoutSuccessUrl("/");
+                .logoutSuccessUrl("/");
     }
 
     @Override

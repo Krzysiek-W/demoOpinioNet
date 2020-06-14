@@ -6,9 +6,10 @@ import com.example.demo.model.Rate;
 import com.example.demo.model.User;
 import com.example.demo.repository.OpinionRepository;
 import com.example.demo.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -19,16 +20,11 @@ import java.time.format.DateTimeFormatter;
 
 @Controller
 @Slf4j
+@RequiredArgsConstructor
 public class OpinionController {
 
     private final UserRepository userRepository;
     private final OpinionRepository opinionRepository;
-
-    @Autowired
-    public OpinionController(UserRepository userRepository, OpinionRepository opinionRepository) {
-        this.userRepository = userRepository;
-        this.opinionRepository = opinionRepository;
-    }
 
 
     @GetMapping("/add-opinion")
@@ -36,6 +32,7 @@ public class OpinionController {
         return "/WEB-INF/views/add-new-opinion-page.jsp";
     }
 
+    @Transactional
     @PostMapping("/add-opinion")
     public String addOpinion(String opinionAboutPlace, String place, String rate, Principal principal) {
         String userName = principal.getName();

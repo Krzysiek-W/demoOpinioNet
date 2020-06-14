@@ -2,11 +2,11 @@ package com.example.demo.controllers.access;
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.authentication.PasswordEncoderParser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import static com.example.demo.model.Privilege.USER;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/register")
 @Slf4j
 public class RegistrationController {
@@ -21,18 +22,12 @@ public class RegistrationController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public RegistrationController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     @GetMapping
     public String prepareRegistrationPage() {
         return "/WEB-INF/views/registryForm.jsp";
     }
 
-
+    @Transactional
     @PostMapping
     public String processRegistrationPage(String username, String password, String firstName, String lastName) {
 
@@ -49,7 +44,7 @@ public class RegistrationController {
 
         userRepository.save(user);
 
-        log.debug("Uzytkownik dodany do bazy dynaych : {}",user);
+        log.debug("Uzytkownik dodany do bazy dynaych : {}", user);
 
         return "redirect:/";
     }
